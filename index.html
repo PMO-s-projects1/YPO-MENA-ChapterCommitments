@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter Commitments by Status — YPO MENA</title>
+<style>
+  :root{
+    --navy:#0a2a4a;
+    --navy-deep:#072037;
+    --navy-line:#16456f;
+    --green:#2f8a3e;
+    --green-deep:#256e31;
+    --green-tint:#eaf5ec;
+    --gold:#c9a227;
+    --gold-tint:#fbf4dd;
+    --red:#c0492f;
+    --red-tint:#f9ecea;
+    --ink:#102a3f;
+    --muted:#6a7d8c;
+    --line:#dde4ea;
+    --row:#ffffff;
+    --row-alt:#f5f8fb;
+    --bg:#eef2f6;
+    --shadow:0 1px 3px rgba(10,42,74,.08),0 8px 30px rgba(10,42,74,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.45;
+  }
+  .wrap{max-width:1340px;margin:0 auto;padding:28px 20px 60px}
+
+  /* Masthead */
+  .mast{margin-bottom:22px}
+  .eyebrow{
+    display:inline-block;font-size:11px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--green-deep);margin-bottom:8px;
+  }
+  h1{font-size:clamp(22px,3.4vw,32px);line-height:1.12;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;color:var(--navy)}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* Stat strip */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 18px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .num{font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+  .stat .lab{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+  .stat .num em{font-style:normal;font-size:15px;color:var(--muted);font-weight:600}
+
+  /* Controls */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  .search{flex:1 1 240px;min-width:200px;position:relative}
+  .search input{
+    width:100%;padding:10px 14px 10px 38px;border:1px solid var(--line);border-radius:10px;
+    font-size:14px;background:#fff;color:var(--ink);box-shadow:var(--shadow)
+  }
+  .search input:focus{outline:2px solid var(--green);outline-offset:1px;border-color:transparent}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+  .segs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;box-shadow:var(--shadow)}
+  .segs button{
+    border:0;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--muted);
+    padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap
+  }
+  .segs button[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .segs button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+  /* Legend */
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 2px 14px;font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .chip{width:18px;height:18px;border-radius:5px;display:inline-grid;place-items:center;flex:0 0 auto}
+  .chip.met{background:var(--green);color:#fff}
+  .chip.no{background:var(--red-tint);border:1px solid #e7c4bc;color:var(--red)}
+  .chip svg{width:11px;height:11px}
+  .gbadge{font-size:10px;font-weight:800;letter-spacing:.04em;color:#8a6d10;background:var(--gold-tint);border:1px solid #e6d28a;padding:2px 7px;border-radius:5px}
+
+  /* Table */
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .scroll{overflow:auto;max-height:80vh;-webkit-overflow-scrolling:touch}
+  table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+  thead th{
+    position:sticky;top:0;z-index:3;background:var(--navy);color:#fff;font-weight:700;
+    padding:0;vertical-align:bottom;border-bottom:2px solid var(--navy-deep)
+  }
+  thead th .th{padding:14px 8px;display:block;text-align:center;line-height:1.2}
+  thead th.chcol{text-align:left}
+  thead th.chcol .th{text-align:left;padding-left:18px}
+  /* vertical commitment headers */
+  th.cmt .th{
+    writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;
+    margin:0 auto;font-size:11.5px;font-weight:600;letter-spacing:.02em;
+    min-height:108px;padding:12px 0 10px
+  }
+  th.metcol .th,th.cmt.summary .th{writing-mode:horizontal-tb;transform:none;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+
+  /* sticky first column */
+  th.chcol,td.chcol{position:sticky;left:0;z-index:2}
+  thead th.chcol{z-index:4}
+  td.chcol{
+    background:var(--navy);color:#fff;font-weight:600;font-size:13.5px;
+    padding:12px 14px 12px 18px;border-bottom:1px solid var(--navy-line);
+    min-width:230px;box-shadow:6px 0 12px -8px rgba(7,32,55,.45)
+  }
+  td.chcol .cn{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  td.chcol small{display:block;color:#9db6cd;font-weight:500;font-size:11px;margin-top:3px}
+
+  tbody td{
+    border-bottom:1px solid var(--line);text-align:center;padding:0;height:46px;background:var(--row)
+  }
+  tbody tr:nth-child(even) td{background:var(--row-alt)}
+  tbody tr:nth-child(even) td.chcol{background:var(--navy)}
+  tbody tr:hover td{background:#fffaf0}
+  tbody tr:hover td.chcol{background:var(--navy-deep)}
+
+  .box{width:26px;height:26px;border-radius:6px;display:inline-grid;place-items:center;margin:0 auto}
+  .box.met{background:var(--green)}
+  .box.met svg{width:15px;height:15px;color:#fff}
+  .box.no{background:var(--red-tint);border:1px solid #e7c4bc}
+  .box.no svg{width:12px;height:12px;color:var(--red)}
+
+  /* met summary cell */
+  td.metcell{font-weight:800;font-size:14px}
+  .metpill{display:inline-flex;align-items:baseline;gap:2px;padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+  .metpill.full{background:var(--green-tint);color:var(--green-deep)}
+  .metpill.part{background:#fff4e6;color:#9a6b12}
+  .metpill .tot{font-size:11px;font-weight:600;opacity:.7}
+
+  .empty{padding:40px;text-align:center;color:var(--muted);font-size:14px;display:none}
+
+  footer{margin-top:18px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .confid{font-weight:700;color:var(--red);letter-spacing:.02em}
+
+  @media (max-width:640px){
+    .wrap{padding:18px 12px 48px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    td.chcol{min-width:170px;font-size:12.5px}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <span class="eyebrow">YPO &middot; Middle East / North Africa</span>
+    <h1>Chapter Commitments by Status</h1>
+    <p class="sub">Commitment fulfilment across all MENA chapters &middot; <b>As of 19 June 2026</b></p>
+  </header>
+
+  <section class="stats" id="stats"></section>
+
+  <div class="controls">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search chapters…" aria-label="Search chapters">
+    </div>
+    <div class="segs" role="group" aria-label="Filter by status">
+      <button data-f="all" aria-pressed="true">All</button>
+      <button data-f="met" aria-pressed="false">Fully met</button>
+      <button data-f="open" aria-pressed="false">Open items</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="chip met"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M5 13l4 4L19 7"/></svg></i> Commitment met</span>
+    <span><i class="chip no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></i> Not yet met</span>
+    <span><i class="gbadge">GOLD</i> YPO Gold chapter</span>
+  </div>
+
+  <div class="card">
+    <div class="scroll">
+      <table id="tbl">
+        <thead><tr id="head"></tr></thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty">No chapters match your search.</div>
+  </div>
+
+  <footer>
+    <span class="confid">Confidential — Do Not Distribute</span>
+    <span>Source: Chapter Commitments by Status report &middot; 27 chapters &middot; 14 commitments each</span>
+  </footer>
+</div>
+
+<script>
+const DATA = {"title":"Chapter Commitments by Status","region":"Middle East / North Africa","generated":"19 June 2026","commitments":[{"label":"Charter","full":"Chapter Charter Commitment"},{"label":"Bylaws","full":"Chapter Bylaws Commitment"},{"label":"Strategic Plan","full":"Strategic Plan Commitment"},{"label":"Officer ID","full":"Core Officer Identification Commitment"},{"label":"Officer Trained","full":"Core Officer Trained Commitment"},{"label":"RBM","full":"RBM Attendance Commitment"},{"label":"Conduct Cmte","full":"Chapter Conduct Committee Commitment"},{"label":"Mgr Workshop","full":"Chapter Manager Workshop Commitment"},{"label":"Learning Cal","full":"Learning Calendar Commitment"},{"label":"Forum Mod","full":"Trained Forum Moderator Commitment"},{"label":"Forum Training","full":"Forum Training Commitment"},{"label":"Forum Data","full":"Forum Data Commitment"},{"label":"Membership","full":"Membership Commitment"},{"label":"Min Members","full":"Minimum # of Members Commitment"}],"chapters":[{"name":"Dubai Downtown Integrated","fullName":"YPO Dubai Downtown Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":107.0,"secondary":21.0},{"name":"Emirates Integrated","fullName":"YPO Emirates Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":4.0,"primary":166.0,"secondary":48.0},{"name":"Levant Integrated","fullName":"YPO Levant Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":44.0,"secondary":14.0},{"name":"MENA One Regional Integrated","fullName":"YPO MENA One Regional Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":108.0,"secondary":24.0},{"name":"Morocco Integrated","fullName":"YPO Morocco Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":4.0,"primary":70.0,"secondary":5.0},{"name":"Tunisia Integrated","fullName":"YPO Tunisia Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":29.0,"secondary":1.0},{"name":"UAE Integrated","fullName":"YPO UAE Integrated","gold":false,"met":14,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":4.0,"primary":66.0,"secondary":7.0},{"name":"Gold Lebanon","fullName":"YPO Gold Lebanon","gold":true,"met":13,"total":14,"flags":[true,true,true,true,false,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":2.0,"primary":54.0,"secondary":18.0},{"name":"Jordan Integrated","fullName":"YPO Jordan Integrated","gold":false,"met":13,"total":14,"flags":[false,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":80.0,"secondary":10.0},{"name":"Khaleej Integrated","fullName":"YPO Khaleej Integrated","gold":false,"met":13,"total":14,"flags":[true,true,true,true,true,true,true,true,false,true,true,true,true,true],"officersElected":5.0,"officersTrained":4.0,"primary":24.0,"secondary":8.0},{"name":"Lebanon","fullName":"YPO Lebanon","gold":false,"met":13,"total":14,"flags":[false,true,true,true,true,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":47.0,"secondary":12.0},{"name":"MENA Gulf Regional Integrated","fullName":"YPO MENA Gulf Regional Integrated","gold":false,"met":13,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":34.0,"secondary":10.0},{"name":"Olive MENA Regional Integrated","fullName":"YPO Olive MENA Regional Integrated","gold":false,"met":13,"total":14,"flags":[true,true,true,true,false,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":3.0,"primary":29.0,"secondary":2.0},{"name":"Pakistan","fullName":"YPO Pakistan","gold":false,"met":13,"total":14,"flags":[true,true,true,true,false,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":3.0,"primary":58.0,"secondary":5.0},{"name":"Saudi","fullName":"YPO Saudi","gold":false,"met":13,"total":14,"flags":[true,true,true,true,true,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":5.0,"primary":110.0,"secondary":15.0},{"name":"Capital Pakistan Integrated","fullName":"YPO Capital Pakistan Integrated","gold":false,"met":12,"total":14,"flags":[false,true,true,true,true,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":4.0,"primary":47.0,"secondary":4.0},{"name":"Dubai Integrated","fullName":"YPO Dubai Integrated","gold":false,"met":12,"total":14,"flags":[true,true,true,false,true,true,true,true,true,true,false,true,true,true],"officersElected":4.0,"officersTrained":4.0,"primary":168.0,"secondary":27.0},{"name":"Gold Pakistan","fullName":"YPO Gold Pakistan","gold":true,"met":12,"total":14,"flags":[false,true,true,false,true,true,true,true,true,true,true,true,true,true],"officersElected":4.0,"officersTrained":4.0,"primary":69.0,"secondary":7.0},{"name":"Palestine Integrated","fullName":"YPO Palestine Integrated","gold":false,"met":12,"total":14,"flags":[false,true,true,true,false,true,true,true,true,true,true,true,true,true],"officersElected":5.0,"officersTrained":1.0,"primary":23.0,"secondary":1.0},{"name":"Bahrain Integrated","fullName":"YPO Bahrain Integrated","gold":false,"met":11,"total":14,"flags":[false,true,true,true,false,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":3.0,"primary":39.0,"secondary":16.0},{"name":"Cairo Integrated","fullName":"YPO Cairo Integrated","gold":false,"met":11,"total":14,"flags":[false,true,true,true,false,true,true,true,true,false,true,true,true,true],"officersElected":5.0,"officersTrained":0.0,"primary":84.0,"secondary":1.0},{"name":"Gold Saudi","fullName":"YPO Gold Saudi","gold":true,"met":11,"total":14,"flags":[false,true,true,true,false,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":2.0,"primary":80.0,"secondary":14.0},{"name":"Indus Integrated","fullName":"YPO Indus Integrated","gold":false,"met":11,"total":14,"flags":[false,true,true,false,true,true,true,true,true,true,false,true,true,true],"officersElected":4.0,"officersTrained":5.0,"primary":66.0,"secondary":2.0},{"name":"Iraq Integrated","fullName":"YPO Iraq Integrated","gold":false,"met":11,"total":14,"flags":[true,true,true,true,false,true,true,true,true,false,false,true,true,true],"officersElected":5.0,"officersTrained":0.0,"primary":22.0,"secondary":2.0},{"name":"Oman Integrated","fullName":"YPO Oman Integrated","gold":false,"met":11,"total":14,"flags":[false,true,true,true,false,true,true,true,true,true,false,true,true,true],"officersElected":5.0,"officersTrained":3.0,"primary":59.0,"secondary":8.0},{"name":"Kuwait Integrated","fullName":"YPO Kuwait Integrated","gold":false,"met":10,"total":14,"flags":[false,true,true,true,false,true,true,true,true,false,false,true,true,true],"officersElected":5.0,"officersTrained":2.0,"primary":45.0,"secondary":1.0},{"name":"Qatar Integrated","fullName":"YPO Qatar Integrated","gold":false,"met":10,"total":14,"flags":[true,true,true,true,false,true,false,true,true,false,false,true,true,true],"officersElected":5.0,"officersTrained":2.0,"primary":29.0,"secondary":7.0}]};
+
+const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M5 13l4 4L19 7"/></svg>';
+const CROSS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+// ---- stats ----
+const ch = DATA.chapters;
+const fullyMet = ch.filter(c=>c.met===c.total).length;
+const totalCells = ch.reduce((s,c)=>s+c.total,0);
+const metCells = ch.reduce((s,c)=>s+c.flags.filter(Boolean).length,0);
+const sorted = ch.map(c=>c.met).sort((a,b)=>a-b);
+const median = sorted[Math.floor(sorted.length/2)];
+const stats = [
+  {num: ch.length, lab:'Chapters'},
+  {num: fullyMet+' <em>of '+ch.length+'</em>', lab:'Fully met (14/14)'},
+  {num: Math.round(metCells/totalCells*100)+'%', lab:'Commitments met'},
+  {num: median+' <em>/14</em>', lab:'Median per chapter'},
+];
+document.getElementById('stats').innerHTML = stats.map(s=>
+  `<div class="stat"><div class="num">${s.num}</div><div class="lab">${s.lab}</div></div>`).join('');
+
+// ---- header ----
+const head = document.getElementById('head');
+let h = `<th class="chcol"><span class="th">Chapter</span></th>`;
+DATA.commitments.forEach(c=>{
+  h += `<th class="cmt" title="${c.full}"><span class="th">${c.label}</span></th>`;
+});
+h += `<th class="cmt summary metcol"><span class="th">Total Met</span></th>`;
+head.innerHTML = h;
+
+// ---- rows ----
+const body = document.getElementById('body');
+function render(list){
+  body.innerHTML = list.map(c=>{
+    const gold = c.gold ? `<i class="gbadge">GOLD</i>` : '';
+    const boxes = c.flags.map((f,i)=>
+      `<td title="${DATA.commitments[i].full}: ${f?'Met':'Not yet met'}">`+
+      (f ? `<span class="box met">${TICK}</span>` : `<span class="box no">${CROSS}</span>`)+
+      `</td>`).join('');
+    const full = c.met===c.total;
+    const pill = `<span class="metpill ${full?'full':'part'}">${c.met}<span class="tot">/${c.total}</span></span>`;
+    return `<tr>
+      <td class="chcol"><div class="cn">${gold}<span>${c.name}</span></div></td>
+      ${boxes}
+      <td class="metcell">${pill}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('empty').style.display = list.length ? 'none':'block';
+}
+
+// ---- filter / search ----
+let filter='all', term='';
+function apply(){
+  let list = ch.slice();
+  if(filter==='met') list = list.filter(c=>c.met===c.total);
+  else if(filter==='open') list = list.filter(c=>c.met<c.total);
+  if(term){ const t=term.toLowerCase(); list = list.filter(c=>c.name.toLowerCase().includes(t)); }
+  render(list);
+}
+document.querySelectorAll('.segs button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.segs button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    filter=b.dataset.f; apply();
+  });
+});
+document.getElementById('q').addEventListener('input',e=>{term=e.target.value;apply();});
+
+render(ch);
+</script>
+</body>
+</html>
